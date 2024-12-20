@@ -12,12 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('leads', function (Blueprint $table) {
-            $table->id('user_id');
-            $table->string('email', 100)->unique();
-            $table->string('password', 255);
-            $table->enum('role', ['Admin', 'Customers', 'Vendor']);
-            $table->enum('status', ['Active', 'Inactive']);
-            $table->timestamps();
+            $table->id();
+            $table->unsignedBigInteger('customer_id');
+            $table->integer('message_count')->default(0);
+            $table->string('status')->default('new'); 
+            $table->integer('delivered')->default(0);
+            $table->text('comments')->nullable();
+            
+            
+            $table->foreign('customer_id')->references('customer_id')->on('customers')->onDelete('cascade');
         });
     }
 

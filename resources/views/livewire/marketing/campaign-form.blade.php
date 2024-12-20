@@ -23,7 +23,7 @@
 
                 <!-- Description -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Description or Massage</label>
+                    <label class="block text-sm font-medium text-gray-700">Massage</label>
                     <textarea wire:model="description" rows="3"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
                     @error('description') <span class="text-sm text-red-500">{{ $message }}</span> @enderror

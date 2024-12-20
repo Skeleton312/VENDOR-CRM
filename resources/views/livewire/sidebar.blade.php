@@ -213,8 +213,8 @@
                         :class="isActive('/marketing/whatsapp') ? 'bg-indigo-50 text-indigo-600' : 'hover:bg-indigo-50 text-gray-600'">
                         WhatsApp Campaign
                     </a>
-                    <a href="/marketing/leads" class="p-4 rounded"
-                        :class="isActive('/marketing/leads') ? 'bg-indigo-50 text-indigo-600' : 'hover:bg-indigo-50 text-gray-600'">
+                    <a href="/leads" class="p-4 rounded"
+                        :class="isActive('/leads') ? 'bg-indigo-50 text-indigo-600' : 'hover:bg-indigo-50 text-gray-600'">
                         Lead Management
                     </a>
                     <a href="/marketing/analysis" class="p-4 rounded"

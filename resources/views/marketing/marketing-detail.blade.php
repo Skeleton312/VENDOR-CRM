@@ -65,7 +65,7 @@
             </tbody>
             </table>
             @else 
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div>
                 <p>Campaign hasn't sent to anyone yet.</p>
             </div>
             @endif

@@ -15,14 +15,22 @@ class MarketingDetail extends Model
         'campaign_id', 
         'campaign_name', 
         'send_id', 
+        'state_id',
+        'state',
         'customer_name', 
         'customer_phone',
         'scheduled_date',
         'send_date', 
-        'status'];
+        'status',
+        'customer_id'
+    ];
 
     public function campaign()
     {
         return $this->belongsTo(MarketingCampaign::class, 'campaign_id');
+    }
+    public function customer()
+    {
+        return $this->belongsTo(MarketingDetail::class, 'customer_id');
     }
 }

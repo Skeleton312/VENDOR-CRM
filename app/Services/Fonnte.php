@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Customer;
 use App\Models\MarketingCampaign;
 use App\Models\MarketingDetail;
+use App\Models\Lead;
 use Carbon\Carbon;
 
 class Fonnte
@@ -76,14 +77,19 @@ class Fonnte
         $campaign = MarketingCampaign::findOrFail($campaignId);
         $campaignName = $campaign->campaign_name;
         $sendDate = now()->toDateTimeString();
-        $status = $response->status;
-        $formattedDatetime = Carbon::createFromFormat('Y-m-d\TH:i', $schedule)->format('Y-m-d H:i:s');
+        $status = $response->process;
+        $formattedDatetime = null;
+        if($schedule){
+            $formattedDatetime = Carbon::createFromFormat('Y-m-d\TH:i', $schedule)->format('Y-m-d H:i:s');
+        }
+        
         
         foreach ($selectedCustomerIds as $index => $id) {
             $customer = Customer::find($id);
 
             if ($customer) {
                 $customerName = $customer->customer_name;
+                $customerId = $customer->customer_id;
                 $customerPhone = $customer->customer_phone;
                 $currentSendId = $sendId[$index];
                 MarketingDetail::create([
@@ -92,11 +98,15 @@ class Fonnte
                     'send_id' => $currentSendId,
                     'customer_name' => $customerName,
                     'customer_phone' => $customerPhone,
+                    'customer_id' => $customerId,
                     'send_date' => $sendDate,
                     'scheduled_date' => $formattedDatetime,
                     'status' => $status,
                 ]);
-            }
-        }
+                $massageCount = Lead::where('customer_id', $customerId)->value('message_count');
+                Lead::where('customer_id', $customerId)->update([ 
+                    'message_count' => $massageCount + 1, 
+                ]);
+        }}
     }
 }

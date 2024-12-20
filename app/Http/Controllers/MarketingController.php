@@ -5,6 +5,7 @@ use App\Models\MarketingCampaign;
 use App\Models\MarketingDetail;
 use App\Models\ScheduledHistory;
 use App\Models\Customer;
+use App\Models\Lead;
 use App\Services\Fonnte;
 use Illuminate\Http\Request;
 
@@ -21,10 +22,6 @@ class MarketingController extends Controller
     public function whatsapp()
     {
         return view('marketing.index');
-    }
-    public function leads()
-    {
-        return view('marketing.lead');
     }
     public function analysis()
     {
@@ -79,7 +76,6 @@ class MarketingController extends Controller
         }
 
         $response = $this->fonnte->send('https://api.fonnte.com/send', $postData);
-
     
         $this->fonnte->saveDetail($response, $selectedCustomerIds, $campaignId, $postData, $scheduleDate);
 
@@ -122,6 +118,41 @@ class MarketingController extends Controller
             'unscheduledDetails' => $unscheduledDetails, 
             'scheduledDetails' => $scheduledDetails, 
         ]);
+    }
+    public function handleWebhook(Request $request)
+    {
+        
+        $data = json_decode($request, true);
+        dd($data);
+        $id = $data['id'];
+        $stateid = $data['stateid'];
+        $status = $data['status'];
+        $state = $data['state'];
+
+        if ($stateid !== null) {
+            MarketingDetail::where('send_id', $id)
+                ->update([
+                    'status' => $status,
+                    'state' => $state,
+                    'state_id' => $stateid,
+                ]);
+            Lead::where('send_id', $id)
+                ->update([
+                    'status' => $status,
+                    'state' => $state,
+                    'state_id' => $stateid,
+                ]);
+        } elseif ($stateid === null) {
+            MarketingDetail::where('send_id', $id)
+                ->update(['status' => $status]);
+            Lead::where('send_id', $id)
+                ->update(['status' => $status]);
+        } else {
+            MarketingDetail::where('state_id', $stateid)
+                ->update(['state' => $state]);
+            Lead::where('state_id', $stateid)
+                ->update(['state' => $state]);
+        }
     }
     
 }

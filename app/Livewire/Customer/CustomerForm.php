@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Lead;
 use App\Models\Customer;
 use Livewire\Component;
 
@@ -153,14 +154,24 @@ class CustomerForm extends Component
 
             // Kirim notifikasi ke komponen parent
             $this->dispatch('customerSaved', $message);
-
+            $this->updateLeads();
         } catch (\Exception $e) {
             DB::rollBack();
             $this->isLoading = false;
             session()->flash('error', 'Error: ' . $e->getMessage());
         }
     }
-
+    private function updateLeads(){
+        $customersWithoutLeads = Customer::whereDoesntHave('leads')->get();
+        // Loop dan tambahkan data lead
+        DB::beginTransaction();
+        foreach ($customersWithoutLeads as $customer) {
+            Lead::create([
+                'customer_id' => $customer->customer_id,
+            ]);
+        }
+        DB::commit();
+    }
     // Reset semua state
     private function resetState()
     {

@@ -18,6 +18,10 @@ class Customer extends Model
     {
         return $this->hasMany(Project::class, 'customer_id', 'customer_id');
     }
+    public function leads()
+    {
+        return $this->hasOne(Lead::class, 'customer_id', 'customer_id');
+    }
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -27,4 +31,5 @@ class Customer extends Model
     {
         return $this->hasMany(CustomerInteraction::class, 'customer_id');
     }
+   
 }

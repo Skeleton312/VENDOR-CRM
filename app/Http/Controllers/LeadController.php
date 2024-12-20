@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lead;
+use App\Models\MarketingDetail;
 use Illuminate\Http\Request;
 
 class LeadController extends Controller
@@ -12,7 +13,7 @@ class LeadController extends Controller
      */
     public function index()
     {
-        //
+        return view('marketing.lead');
     }
 
     /**
@@ -50,9 +51,8 @@ class LeadController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Lead $lead)
+    public function update()
     {
-        //
     }
 
     /**
